@@ -19,12 +19,15 @@ KeypointDetector::KeypointDetector() : Node("keypoint_detector"), tf_buffer_(get
         RCLCPP_ERROR(this->get_logger(), "Failed to load features: %s", e.what());
         return;
     }
+
+    for (const auto& f : features_) {
+        RCLCPP_INFO(get_logger(), "Feature: %s, x: %f, y: %f, theta: %f", f.type.c_str(), f.x, f.y, f.theta);
+    }
     
-    keypoints_ = {{-0.75, 0.75}  , {0.75, 0.75}, {0.75, -0.75}, {-0.75, -0.75}/* , {-0.265062, 0.13},{-0.115895, -0.36},{0.44, 0.12},{0.29726, -0.29},{-0.158467 ,0.26}  */};
 
-    keypoint_pub_ = create_publisher<sensor_msgs::msg::PointCloud2>("/keypoints", 10);
+    corners_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/corners", 10);
 
-    //timer_ = create_wall_timer(std::chrono::milliseconds(100), std::bind(&KeypointDetector::checkAndPublishKeypoints, this));
+    timer_ = create_wall_timer(std::chrono::milliseconds(1000), std::bind(&KeypointDetector::checkAndPublishKeypoints, this));
 }
 
 std::vector<KeypointDetector::Feature> KeypointDetector::load_features(const std::string& yaml_file_path) {
@@ -45,76 +48,95 @@ std::vector<KeypointDetector::Feature> KeypointDetector::load_features(const std
         features.push_back(feature);
     }
 
-    for (const auto& f : features) {
-        RCLCPP_INFO(get_logger(), "Feature: %s, x: %f, y: %f, theta: %f", f.type.c_str(), f.x, f.y, f.theta);
-    }
-
     return features;
 }
 
 void KeypointDetector::checkAndPublishKeypoints() {
     geometry_msgs::msg::TransformStamped transform;
+    rclcpp::Time now = this->get_clock()->now() - rclcpp::Duration::from_seconds(0.05);
+
     try {
-        transform = tf_buffer_.lookupTransform("base_link_real", "map", tf2::TimePointZero);
+        transform = tf_buffer_.lookupTransform("base_link_real", "map", now);
     } catch (tf2::TransformException &ex) {
         RCLCPP_WARN(get_logger(), "Could not get robot transform: %s", ex.what());
         return;
     }
 
-    double x = transform.transform.translation.x;
-    double y = transform.transform.translation.y;
-
-    tf2::Quaternion q(
-        transform.transform.rotation.x,
-        transform.transform.rotation.y,
-        transform.transform.rotation.z,
-        transform.transform.rotation.w
-    );
-    double roll, pitch, theta;
-    tf2::Matrix3x3(q).getRPY(roll, pitch, theta);
-
-    publishTransformedKeypoints(transform);
+    publishTransformedCorners(transform);
     
 }
 
-void KeypointDetector::publishTransformedKeypoints(const geometry_msgs::msg::TransformStamped& transform) {
-    sensor_msgs::msg::PointCloud2 cloud_msg;
-    cloud_msg.header.stamp = now();
-    cloud_msg.header.frame_id = "base_link_real";
-    cloud_msg.height = 1;
-    cloud_msg.width = keypoints_.size();
-    cloud_msg.is_dense = true;
-    cloud_msg.is_bigendian = false;
+void KeypointDetector::publishTransformedCorners(const geometry_msgs::msg::TransformStamped& transform) {
+    visualization_msgs::msg::MarkerArray corner_array;
 
-    sensor_msgs::PointCloud2Modifier modifier(cloud_msg);
-    modifier.setPointCloud2Fields(3, 
-        "x", 1, sensor_msgs::msg::PointField::FLOAT32,
-        "y", 1, sensor_msgs::msg::PointField::FLOAT32,
-        "z", 1, sensor_msgs::msg::PointField::FLOAT32
-    );
 
-    sensor_msgs::PointCloud2Iterator<float> iter_x(cloud_msg, "x");
-    sensor_msgs::PointCloud2Iterator<float> iter_y(cloud_msg, "y");
-    sensor_msgs::PointCloud2Iterator<float> iter_z(cloud_msg, "z");
+    int i = 0;
+    for (const auto &feature : features_) {
+        visualization_msgs::msg::Marker marker;
+        marker.header.frame_id = "base_link_real";
+        marker.header.stamp = this->get_clock()->now();
+        marker.ns = "corners";
+        marker.id = i++;
 
-    for (const auto& kp : keypoints_) {
+        marker.type = visualization_msgs::msg::Marker::ARROW;
+        marker.action = visualization_msgs::msg::Marker::ADD;
+        
+
+
+        //
+        // POSITION ------------------------------------
         geometry_msgs::msg::Point point;
-        point.x = kp.first;
-        point.y = kp.second;
+        point.x = feature.x;
+        point.y = feature.y;
         point.z = 0.0;
 
         geometry_msgs::msg::Point transformed_point;
         tf2::doTransform(point, transformed_point, transform);
 
-        *iter_x = transformed_point.x;
-        *iter_y = transformed_point.y;
-        *iter_z = transformed_point.z;
+        marker.pose.position.x = transformed_point.x;
+        marker.pose.position.y = transformed_point.y;
+        marker.pose.position.z = 0.05;
+        // ------------------------------------ POSITION
+        
 
-        ++iter_x; ++iter_y; ++iter_z;
+        //
+        // ORIENTATION ------------------------------------
+        double feature_theta_radians = feature.theta * M_PI / 180.0 ;
+        tf2::Quaternion q_feature;
+        q_feature.setRPY(0, 0, feature_theta_radians);
+
+
+        tf2::Quaternion q_transform;
+        q_transform.setX(transform.transform.rotation.x);
+        q_transform.setY(transform.transform.rotation.y);
+        q_transform.setZ(transform.transform.rotation.z);
+        q_transform.setW(transform.transform.rotation.w);
+
+        tf2::Quaternion q = q_transform * q_feature;
+        marker.pose.orientation.x = q.x();
+        marker.pose.orientation.y = q.y();
+        marker.pose.orientation.z = q.z();
+        marker.pose.orientation.w = q.w();
+        // ------------------------------------ ORIENTATION
+
+
+
+        marker.scale.x = 0.1;
+        marker.scale.y = 0.005;
+        marker.scale.z = 0.01;
+        
+        marker.color.a = 1.0;
+        marker.color.r = 1.0;
+        marker.color.g = 0.0;
+        marker.color.b = 0.0;
+        
+        marker.lifetime = rclcpp::Duration::from_nanoseconds(0);
+
+        corner_array.markers.push_back(marker);
     }
 
-    keypoint_pub_->publish(cloud_msg);
-    //RCLCPP_INFO(get_logger(), "Published transformed keypoints.");
+    corners_pub_->publish(corner_array);
+
 }
 
 int main(int argc, char **argv) {

@@ -19,11 +19,13 @@ find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
+find_package(builtin_interfaces REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
 
-find_package(pluginlib REQUIRED)                  # For Webots plugin support
-find_package(webots_ros2_driver REQUIRED)         # Webots ROS 2 driver
-find_package(yaml-cpp REQUIRED)                   # YAML file parsing
-find_package(ament_index_cpp REQUIRED)            # To find shared package paths
+find_package(pluginlib REQUIRED)               
+find_package(webots_ros2_driver REQUIRED)
+find_package(yaml-cpp REQUIRED)        
+find_package(ament_index_cpp REQUIRED)            
 
 #
 # ─── INCLUDE HEADERS ────────────────────────────────────────────
@@ -40,6 +42,18 @@ install(
   DESTINATION include
 )
 
+
+#
+# ─── FEATURE MESSAGE ─────────────────────────────────────
+#
+
+rosidl_generate_interfaces(${PROJECT_NAME}_msgs
+  "msg/Feature.msg"
+  DEPENDENCIES geometry_msgs std_msgs builtin_interfaces
+)
+
+
+
 #
 # ─── ROBOTCONTROLLER PLUGIN (for Webots) ────────────────────────
 #
@@ -48,12 +62,12 @@ install(
 pluginlib_export_plugin_description_file(webots_ros2_driver robot_controller.xml)
 
 # Build the RobotController as a shared library (for pluginlib)
-add_library(RobotController SHARED
+add_library(${PROJECT_NAME} SHARED
   src/RobotController.cpp
 )
 
 # Link dependencies to the plugin library
-ament_target_dependencies(RobotController
+ament_target_dependencies(${PROJECT_NAME}
   rclcpp
   pluginlib
   webots_ros2_driver
@@ -61,14 +75,14 @@ ament_target_dependencies(RobotController
 )
 
 # Include headers for the plugin target
-target_include_directories(RobotController
+target_include_directories(${PROJECT_NAME}
   PRIVATE
     include
 )
 
 # Install the shared library
 install(TARGETS
-  RobotController
+  ${PROJECT_NAME}
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
@@ -94,6 +108,7 @@ ament_target_dependencies(fake_detector
   nav_msgs
   yaml-cpp
   ament_index_cpp
+  visualization_msgs
 )
 
 target_link_libraries(fake_detector yaml-cpp)
@@ -103,6 +118,9 @@ install(TARGETS
   fake_detector
   DESTINATION lib/${PROJECT_NAME}
 )
+
+
+
 
 #
 # ─── INSTALL RESOURCE DIRECTORIES ───────────────────────────────

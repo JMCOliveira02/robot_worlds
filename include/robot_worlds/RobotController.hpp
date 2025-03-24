@@ -74,7 +74,7 @@ private:
   double last_left_wheel_pos = 0.0;
   double last_right_wheel_pos = 0.0;
 
-
+  webots_ros2_driver::WebotsNode* node_; 
 };
 } // namespace robot_controller
 #endif

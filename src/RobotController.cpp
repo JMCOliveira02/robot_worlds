@@ -59,6 +59,8 @@ void RobotController::init(
   last_right_wheel_pos = 0.0;
 
 
+  this->node_ = node;
+
 }
 
 void RobotController::step() {
@@ -132,7 +134,7 @@ void RobotController::step() {
 
 
   geometry_msgs::msg::TransformStamped tf_real;
-  tf_real.header.stamp = rclcpp::Clock().now();
+  tf_real.header.stamp = node_->get_clock()->now();
   tf_real.header.frame_id = "map";
   tf_real.child_frame_id = "base_link_real";
   tf_real.transform.translation.x = position[0];
@@ -181,7 +183,7 @@ void RobotController::step() {
     est_q.setRPY(0, 0, est_theta);
 
     geometry_msgs::msg::TransformStamped tf_relative;
-    tf_relative.header.stamp = rclcpp::Clock().now();
+    tf_relative.header.stamp = node_->get_clock()->now();
     tf_relative.header.frame_id = "odom";
     tf_relative.child_frame_id = "base_link";
     tf_relative.transform.translation.x = est_x;
