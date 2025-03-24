@@ -24,7 +24,9 @@ find_package(rosidl_default_generators REQUIRED)
 find_package(pluginlib REQUIRED)               
 find_package(webots_ros2_driver REQUIRED)
 find_package(yaml-cpp REQUIRED)        
-find_package(ament_index_cpp REQUIRED)            
+find_package(ament_index_cpp REQUIRED)   
+find_package(robot_msgs REQUIRED)
+
 
 #
 # ─── INCLUDE HEADERS ────────────────────────────────────────────
@@ -40,17 +42,6 @@ install(
   DIRECTORY include/
   DESTINATION include
 )
-
-
-#
-# ─── FEATURE MESSAGE ─────────────────────────────────────
-#
-
-rosidl_generate_interfaces(${PROJECT_NAME}
-  "msg/Feature.msg"
-  DEPENDENCIES geometry_msgs std_msgs builtin_interfaces
-)
-
 
 
 #
@@ -108,6 +99,7 @@ ament_target_dependencies(fake_detector
   yaml-cpp
   ament_index_cpp
   visualization_msgs
+  robot_msgs
 )
 
 target_link_libraries(fake_detector yaml-cpp)
@@ -117,8 +109,6 @@ install(TARGETS
   fake_detector
   DESTINATION lib/${PROJECT_NAME}
 )
-
-
 
 
 #

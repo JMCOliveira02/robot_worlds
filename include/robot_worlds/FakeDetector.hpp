@@ -14,8 +14,8 @@
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
-//#include <robot_worlds_msgs/msg/feature.hpp>
-
+#include <robot_msgs/msg/feature.hpp>
+#include <robot_msgs/msg/feature_array.hpp>
 
 
 class KeypointDetector : public rclcpp::Node {
@@ -40,7 +40,7 @@ private:
     tf2_ros::Buffer tf_buffer_;
     tf2_ros::TransformListener tf_listener_;
 
-    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr corners_pub_;
+    rclcpp::Publisher<robot_msgs::msg::FeatureArray>::SharedPtr corners_pub_;
     //rclcpp::Publisher<robot_worlds_msgs::msg::Feature>::SharedPtr features_pub_;
 
     void checkAndPublishKeypoints();
