@@ -3,14 +3,14 @@ features:
     position: { x: 0.75, y: 0.75 }
     orientation: { theta: -135 }
 
-#  - type: corner
-#    position: { x: -0.75, y: 0.75 }
-#    orientation: { theta: -45 }
+  - type: corner
+    position: { x: -0.75, y: 0.75 }
+    orientation: { theta: -45 }
 
- # - type: corner
-  #  position: { x: -0.75, y: -0.75 }
-   # orientation: { theta: 45 }
+  - type: corner
+    position: { x: -0.75, y: -0.75 }
+    orientation: { theta: 45 }
 
-  #- type: corner
-  #  position: { x: 0.75, y: -0.75 }
-  #  orientation: { theta: 135 }
+  - type: corner
+    position: { x: 0.75, y: -0.75 }
+    orientation: { theta: 135 }

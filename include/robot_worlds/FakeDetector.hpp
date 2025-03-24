@@ -48,6 +48,9 @@ private:
     rclcpp::TimerBase::SharedPtr timer_;
     
     void publishTransformedCorners(const geometry_msgs::msg::TransformStamped& transform);
+
+    double computeSensorNoise(double distance) ;
+
 };
 
 #endif // FAKE_DETECTOR

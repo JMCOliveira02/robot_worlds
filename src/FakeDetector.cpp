@@ -65,6 +65,23 @@ void KeypointDetector::checkAndPublishKeypoints() {
     
 }
 
+double KeypointDetector::computeSensorNoise(double distance) {
+    double min_noise = 0.04;
+    double max_noise = 0.4;  
+    double max_distance = 1.5; 
+
+    // Quadratic noise model (better fit for real-world LIDAR)
+    //double noise = min_noise + (max_noise - min_noise) * (distance * distance / (max_distance * max_distance));
+
+    //linear noise model
+    double noise = min_noise + (max_noise - min_noise) * (distance / max_distance);
+
+    //std::cout<<"Noise: "<<noise<<std::endl;
+
+    return std::min(std::max(noise, min_noise), max_noise);
+}
+
+
 void KeypointDetector::publishTransformedCorners(const geometry_msgs::msg::TransformStamped& transform) {
     robot_msgs::msg::FeatureArray corner_msg;
 
@@ -104,9 +121,12 @@ void KeypointDetector::publishTransformedCorners(const geometry_msgs::msg::Trans
         corner.orientation = tf2::toMsg(q);
         // ------------------------------------ ORIENTATION
 
+        double distance = std::hypot(transformed_point.x, transformed_point.y);
+        double noise = computeSensorNoise(distance);
+
         corner.position_covariance = {
-            0.01, 0.0,  0.0,
-            0.0,  0.01, 0.0,
+            noise*noise, 0.0,  0.0,
+            0.0,  noise*noise, 0.0,
             0.0,  0.0,  0.0
         };
 
@@ -114,7 +134,7 @@ void KeypointDetector::publishTransformedCorners(const geometry_msgs::msg::Trans
         corner.orientation_covariance = {
             0.0, 0.0,  0.0,
             0.0, 0.0,  0.0,
-            0.0, 0.0,  0.05 // 0.05 rad² noise on yaw
+            0.0, 0.0,  0.1 // 0.05 rad² noise on yaw
         };
 
         corner_msg.features.push_back(corner);
