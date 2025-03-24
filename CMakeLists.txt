@@ -21,7 +21,6 @@ find_package(tf2_geometry_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
-
 find_package(pluginlib REQUIRED)               
 find_package(webots_ros2_driver REQUIRED)
 find_package(yaml-cpp REQUIRED)        
@@ -47,7 +46,7 @@ install(
 # ─── FEATURE MESSAGE ─────────────────────────────────────
 #
 
-rosidl_generate_interfaces(${PROJECT_NAME}_msgs
+rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Feature.msg"
   DEPENDENCIES geometry_msgs std_msgs builtin_interfaces
 )
