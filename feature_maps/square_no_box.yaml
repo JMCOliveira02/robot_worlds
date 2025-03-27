@@ -14,3 +14,15 @@ features:
   - type: corner
     position: { x: 0.75, y: -0.75 }
     orientation: { theta: 135 }
+
+  - type: square
+    position: { x: -0.2, y: 0.1 }
+    side_length: 0.5
+    rotation: 0
+
+  - type: square
+    position: { x: -0.1, y: -0.4 }
+    side_length: 0.5
+    rotation: 0  
+
+

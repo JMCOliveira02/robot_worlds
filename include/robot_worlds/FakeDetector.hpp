@@ -16,6 +16,8 @@
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <robot_msgs/msg/feature.hpp>
 #include <robot_msgs/msg/feature_array.hpp>
+#include <robot_worlds/FeatureStruct.hpp>
+#include <robot_worlds/MapLoader.hpp>
 
 
 class KeypointDetector : public rclcpp::Node {
@@ -24,18 +26,9 @@ public:
 
 private:
 
-    struct Feature {
-        std::string type;
-        double x;
-        double y;
-        double theta;
-    };
-
-    std::vector<Feature> load_features(const std::string& yaml_file_path);
-    std::vector<Feature> features_;
+    std::vector<map_features::FeaturePtr> global_features_;
 
     std::vector<std::pair<double, double>> keypoints_;
-
     
     tf2_ros::Buffer tf_buffer_;
     tf2_ros::TransformListener tf_listener_;

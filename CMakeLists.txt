@@ -21,12 +21,11 @@ find_package(tf2_geometry_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
-find_package(pluginlib REQUIRED)               
+find_package(pluginlib REQUIRED)
 find_package(webots_ros2_driver REQUIRED)
-find_package(yaml-cpp REQUIRED)        
-find_package(ament_index_cpp REQUIRED)   
+find_package(yaml-cpp REQUIRED)  # Ensure yaml-cpp is found
+find_package(ament_index_cpp REQUIRED)
 find_package(robot_msgs REQUIRED)
-
 
 #
 # ─── INCLUDE HEADERS ────────────────────────────────────────────
@@ -43,8 +42,6 @@ install(
   DESTINATION include
 )
 
-
-#
 # ─── ROBOTCONTROLLER PLUGIN (for Webots) ────────────────────────
 #
 
@@ -78,6 +75,7 @@ install(TARGETS
   RUNTIME DESTINATION bin
 )
 
+
 #
 # ─── FAKE DETECTOR NODE ─────────────────────────────────────────
 #
@@ -85,9 +83,10 @@ install(TARGETS
 # Build a standalone executable for the fake feature detector
 add_executable(fake_detector
   src/FakeDetector.cpp
+  src/MapLoader.cpp
 )
 
-# Link its dependencies
+# Ensure the target dependencies for linking (correct order)
 ament_target_dependencies(fake_detector
   rclcpp
   geometry_msgs
@@ -102,14 +101,16 @@ ament_target_dependencies(fake_detector
   robot_msgs
 )
 
-target_link_libraries(fake_detector yaml-cpp)
+# Explicitly link the required libraries
+target_link_libraries(fake_detector
+  yaml-cpp  # Ensure yaml-cpp is linked
+)
 
 # Install the fake_detector binary
 install(TARGETS
   fake_detector
   DESTINATION lib/${PROJECT_NAME}
 )
-
 
 #
 # ─── INSTALL RESOURCE DIRECTORIES ───────────────────────────────
@@ -125,14 +126,13 @@ install(DIRECTORY
   rviz
   DESTINATION share/${PROJECT_NAME}/
 )
-
-#
 # ─── EXPORTS FOR DOWNSTREAM PACKAGES ────────────────────────────
 #
 
 ament_export_include_directories(include)
 ament_export_libraries(${PROJECT_NAME})
 
+#
 #
 # ─── PACKAGE DECLARATION ────────────────────────────────────────
 #
