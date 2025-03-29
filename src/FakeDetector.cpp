@@ -68,6 +68,7 @@ void KeypointDetector::publishTransformedCorners(const geometry_msgs::msg::Trans
 
     int i = 0;
     for (const auto &feature : global_features_) {
+        //RCLCPP_INFO(this->get_logger(), "Feature type: %s", feature->type.c_str());
         if (feature->type != "corner") continue;
     
         auto corner_map = std::dynamic_pointer_cast<map_features::FeatureCorner>(feature);
@@ -121,6 +122,8 @@ void KeypointDetector::publishTransformedCorners(const geometry_msgs::msg::Trans
             0.0, 0.0,  0.0,
             0.0, 0.0,  0.1 // 0.05 rad² noise on yaw
         };
+
+        corner.type = corner_map->type;
 
         corner_msg.features.push_back(corner);
     }
