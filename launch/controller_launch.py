@@ -19,7 +19,7 @@ def generate_launch_description():
     )
 
     webots = WebotsLauncher(
-        world=os.path.join(world_dir, 'worlds', 'square_no_box.wbt')
+        world=os.path.join(world_dir, 'worlds', 'square_two_boxes.wbt')
     )
 
 

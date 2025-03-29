@@ -14,8 +14,8 @@ def generate_launch_description():
 
     # Paths for robot and map
     robot_description_path = os.path.join(worlds_pkg, 'urdf', 'robot.urdf')
-    world_path = os.path.join(worlds_pkg, 'worlds', 'square_no_box.wbt')
-    map_yaml_path = os.path.join(worlds_pkg, 'maps', 'square_no_box.yaml')
+    world_path = os.path.join(worlds_pkg, 'worlds', 'square_two_boxes.wbt')
+    map_yaml_path = os.path.join(worlds_pkg, 'maps', 'square_two_boxes.yaml')
     rviz_config = os.path.join(worlds_pkg, 'rviz', 'corners_orientation.rviz')
 
     # Webots simulation + robot controller
@@ -93,11 +93,11 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
-        rviz,
+        #rviz,
         webots,
         robot_controller,
         fake_detector,
-        particle_filter,
+        #particle_filter,
         tf_map_to_odom,
         tf_base_to_lidar,
         map_server,

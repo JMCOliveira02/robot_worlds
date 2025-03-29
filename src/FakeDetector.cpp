@@ -37,6 +37,7 @@ void KeypointDetector::checkAndPublishKeypoints() {
 
     try {
         transform = tf_buffer_.lookupTransform("base_link_real", "map", now);
+
     } catch (tf2::TransformException &ex) {
         RCLCPP_WARN(get_logger(), "Could not get robot transform: %s", ex.what());
         return;
@@ -64,20 +65,27 @@ double KeypointDetector::computeSensorNoise(double distance) {
 
 void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::TransformStamped& transform) {
     robot_msgs::msg::FeatureArray feature_array_msg;
+    RCLCPP_INFO(get_logger(), "Entering publish features");
 
-    int i = 0;
     for (const auto &feature : global_features_) {
         std::shared_ptr<map_features::Feature> feature_map;
         if(feature->type == "corner"){
-            auto feature_map = std::dynamic_pointer_cast<map_features::FeatureCorner>(feature);
+            feature_map = std::dynamic_pointer_cast<map_features::FeatureCorner>(feature);
         }
         else if(feature->type== "square" || feature->type == "rectangle"){
-            auto feature_map = std::dynamic_pointer_cast<map_features::FeatureObject>(feature);
+            feature_map = std::dynamic_pointer_cast<map_features::FeatureObject>(feature);
 
         }
         else{
             continue;
         }
+
+        if (!feature_map) {
+            RCLCPP_WARN(get_logger(), "Failed to cast feature");
+            continue;
+        }
+
+        RCLCPP_INFO(get_logger(), "Feature: %s", feature_map->type.c_str());
      
         robot_msgs::msg::Feature feature_msg;
         //
@@ -109,6 +117,7 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
 
         tf2::Quaternion q = q_transform * q_feature;
 
+
     
         feature_msg.orientation = tf2::toMsg(q);
         // ------------------------------------ ORIENTATION
@@ -132,6 +141,7 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
         feature_msg.type = feature_map->type;
 
         feature_array_msg.features.push_back(feature_msg);
+
     }
 
     feature_pub_->publish(feature_array_msg);
