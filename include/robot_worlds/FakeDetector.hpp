@@ -33,14 +33,14 @@ private:
     tf2_ros::Buffer tf_buffer_;
     tf2_ros::TransformListener tf_listener_;
 
-    rclcpp::Publisher<robot_msgs::msg::FeatureArray>::SharedPtr corners_pub_;
+    rclcpp::Publisher<robot_msgs::msg::FeatureArray>::SharedPtr feature_pub_;
     //rclcpp::Publisher<robot_worlds_msgs::msg::Feature>::SharedPtr features_pub_;
 
     void checkAndPublishKeypoints();
 
     rclcpp::TimerBase::SharedPtr timer_;
     
-    void publishTransformedCorners(const geometry_msgs::msg::TransformStamped& transform);
+    void publishTransformedFeatures(const geometry_msgs::msg::TransformStamped& transform);
 
     double computeSensorNoise(double distance) ;
 

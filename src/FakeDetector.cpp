@@ -26,7 +26,7 @@ KeypointDetector::KeypointDetector() : Node("keypoint_detector"), tf_buffer_(get
         return;
     }
     
-    corners_pub_ = this->create_publisher<robot_msgs::msg::FeatureArray>("/corner", 10);
+    feature_pub_ = this->create_publisher<robot_msgs::msg::FeatureArray>("/corner", 10);
 
     timer_ = create_wall_timer(std::chrono::milliseconds(1000), std::bind(&KeypointDetector::checkAndPublishKeypoints, this));
 }
@@ -42,7 +42,7 @@ void KeypointDetector::checkAndPublishKeypoints() {
         return;
     }
 
-    publishTransformedCorners(transform);
+    publishTransformedFeatures(transform);
     
 }
 
@@ -62,34 +62,41 @@ double KeypointDetector::computeSensorNoise(double distance) {
     return std::min(std::max(noise, min_noise), max_noise);
 }
 
-
-void KeypointDetector::publishTransformedCorners(const geometry_msgs::msg::TransformStamped& transform) {
-    robot_msgs::msg::FeatureArray corner_msg;
+void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::TransformStamped& transform) {
+    robot_msgs::msg::FeatureArray feature_array_msg;
 
     int i = 0;
     for (const auto &feature : global_features_) {
-        if (feature->type != "corner") continue;
-    
-        auto corner_map = std::dynamic_pointer_cast<map_features::FeatureCorner>(feature);
+        std::shared_ptr<map_features::Feature> feature_map;
+        if(feature->type == "corner"){
+            auto feature_map = std::dynamic_pointer_cast<map_features::FeatureCorner>(feature);
+        }
+        else if(feature->type== "square" || feature->type == "rectangle"){
+            auto feature_map = std::dynamic_pointer_cast<map_features::FeatureObject>(feature);
+
+        }
+        else{
+            continue;
+        }
      
-        robot_msgs::msg::Feature corner;
+        robot_msgs::msg::Feature feature_msg;
         //
         // POSITION ------------------------------------
         geometry_msgs::msg::Point point;
-        point.x = corner_map->x;
-        point.y = corner_map->y;
+        point.x = feature_map->x;
+        point.y = feature_map->y;
         point.z = 0.0;
 
         geometry_msgs::msg::Point transformed_point;
         tf2::doTransform(point, transformed_point, transform);
 
-        corner.position = transformed_point;
+        feature_msg.position = transformed_point;
         // ------------------------------------ POSITION
         
 
         //
         // ORIENTATION ------------------------------------
-        double feature_theta_radians = corner_map->theta * M_PI / 180.0 ;
+        double feature_theta_radians = feature_map->theta * M_PI / 180.0 ;
         tf2::Quaternion q_feature;
         q_feature.setRPY(0, 0, feature_theta_radians);
 
@@ -103,29 +110,29 @@ void KeypointDetector::publishTransformedCorners(const geometry_msgs::msg::Trans
         tf2::Quaternion q = q_transform * q_feature;
 
     
-        corner.orientation = tf2::toMsg(q);
+        feature_msg.orientation = tf2::toMsg(q);
         // ------------------------------------ ORIENTATION
 
         double distance = std::hypot(transformed_point.x, transformed_point.y);
         double noise = computeSensorNoise(distance);
 
-        corner.position_covariance = {
+        feature_msg.position_covariance = {
             noise*noise, 0.0,  0.0,
             0.0,  noise*noise, 0.0,
             0.0,  0.0,  0.0
         };
 
         // ORIENTATION COVARIANCE (only yaw matters, rest 0)
-        corner.orientation_covariance = {
+        feature_msg.orientation_covariance = {
             0.0, 0.0,  0.0,
             0.0, 0.0,  0.0,
             0.0, 0.0,  0.1 // 0.05 rad² noise on yaw
         };
 
-        corner_msg.features.push_back(corner);
+        feature_array_msg.features.push_back(feature_msg);
     }
 
-    corners_pub_->publish(corner_msg);
+    feature_pub_->publish(feature_array_msg);
 
 }
 
