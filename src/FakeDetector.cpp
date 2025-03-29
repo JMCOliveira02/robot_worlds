@@ -129,6 +129,8 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
             0.0, 0.0,  0.1 // 0.05 rad² noise on yaw
         };
 
+        feature_msg.type = feature_map->type;
+
         feature_array_msg.features.push_back(feature_msg);
     }
 
