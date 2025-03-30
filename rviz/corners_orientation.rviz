@@ -8,7 +8,6 @@ Panels:
         - /Status1
         - /Map1
         - /MarkerArray1
-        - /MarkerArray1/Status1
         - /MarkerArray1/Topic1
         - /MarkerArray1/Namespaces1
       Splitter Ratio: 0.5
@@ -82,9 +81,9 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
-        base_link:
+        base_footprint:
           Value: true
-        base_link_real:
+        base_footprint_real:
           Value: true
         lidar2D:
           Value: true
@@ -99,10 +98,10 @@ Visualization Manager:
       Show Names: false
       Tree:
         map:
-          base_link_real:
+          base_footprint_real:
             {}
           odom:
-            base_link:
+            base_footprint:
               lidar2D:
                 {}
       Update Interval: 0
@@ -111,13 +110,57 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        corners: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: System Default
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /corners
+      Value: true
+    - Alpha: 1
+      Axes Length: 1
+      Axes Radius: 0.10000000149011612
+      Class: rviz_default_plugins/Pose
+      Color: 255; 25; 0
+      Enabled: true
+      Head Length: 0.30000001192092896
+      Head Radius: 0.10000000149011612
+      Name: Pose
+      Shaft Length: 1
+      Shaft Radius: 0.05000000074505806
+      Shape: Arrow
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /estimated_pose
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: MarkerArray
+      Namespaces:
+        feature: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /feature_markers
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: MarkerArray
+      Namespaces:
+        particle: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /particles
       Value: true
   Enabled: true
   Global Options:
@@ -165,7 +208,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 3.675603151321411
+      Distance: 5.319020748138428
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -180,10 +223,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4547973573207855
+      Pitch: 1.3197970390319824
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.765417098999023
+      Yaw: 4.685417652130127
     Saved: ~
 Window Geometry:
   Displays:

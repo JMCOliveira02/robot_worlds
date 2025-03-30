@@ -35,7 +35,7 @@ private:
 
     rclcpp::Publisher<robot_msgs::msg::FeatureArray>::SharedPtr feature_pub_;
     rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr feature_markers_pub_;
-    rclcpp::Publisher<visualization_msgs::msg::Marker>::ShardePtr keypoints_markers_pub_;
+    rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr keypoints_markers_pub_;
 
     void checkAndPublishKeypoints();
 

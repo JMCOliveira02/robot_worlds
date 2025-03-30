@@ -151,7 +151,7 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
 
         // MARKER -----------------------------------
         visualization_msgs::msg::Marker marker;
-        marker.header.frame_id = "base_footprint";
+        marker.header.frame_id = "base_footprint_real";
         marker.header.stamp = this->get_clock()->now();
         marker.ns = "feature";
         marker.id = i++;
