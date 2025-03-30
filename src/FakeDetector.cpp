@@ -51,19 +51,8 @@ void KeypointDetector::checkAndPublishKeypoints() {
 }
 
 double KeypointDetector::computeSensorNoise(double distance) {
-    double min_noise = 0.04;
-    double max_noise = 0.4;  
-    double max_distance = 1.5; 
 
-    // Quadratic noise model (better fit for real-world LIDAR)
-    //double noise = min_noise + (max_noise - min_noise) * (distance * distance / (max_distance * max_distance));
-
-    //linear noise model
-    double noise = min_noise + (max_noise - min_noise) * (distance / max_distance);
-
-    //std::cout<<"Noise: "<<noise<<std::endl;
-
-    return std::min(std::max(noise, min_noise), max_noise);
+    return distance * 0.15; 
 }
 
 
@@ -92,7 +81,7 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
             continue;
         }
 
-        RCLCPP_INFO(get_logger(), "Feature: %s", feature_map->type.c_str());
+        //RCLCPP_INFO(get_logger(), "Feature: %s", feature_map->type.c_str());
      
         robot_msgs::msg::Feature feature_msg;
         //
@@ -106,6 +95,8 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
         tf2::doTransform(point, transformed_point, transform);
 
         feature_msg.position = transformed_point;
+
+        RCLCPP_INFO(get_logger(), "Transformed point: (%.3f, %.3f, %.3f)", transformed_point.x, transformed_point.y, transformed_point.z);
         // ------------------------------------ POSITION
         
 

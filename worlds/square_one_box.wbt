@@ -24,12 +24,12 @@ RectangleArena {
   floorSize 1.5 1.5
 }
 WoodenBox {
-  translation 0.2 -0.2 0.05
+  translation 0 0 0.05
   name "wooden box(2)"
   size 0.1 0.1 0.1
 }
 DEF ROBOT_1 Robot {
-  translation 0 0 0.001
+  translation 0.3 0.3 0.001
   children [
     Lidar {
       translation 0 0 0.05
