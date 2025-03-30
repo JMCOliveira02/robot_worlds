@@ -30,6 +30,7 @@ WoodenBox {
 }
 DEF ROBOT_1 Robot {
   translation 0.3 0.3 0.001
+  rotation 0 0 1 3.141
   children [
     Lidar {
       translation 0 0 0.05
