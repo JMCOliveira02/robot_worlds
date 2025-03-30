@@ -34,7 +34,8 @@ private:
     tf2_ros::TransformListener tf_listener_;
 
     rclcpp::Publisher<robot_msgs::msg::FeatureArray>::SharedPtr feature_pub_;
-    //rclcpp::Publisher<robot_worlds_msgs::msg::Feature>::SharedPtr features_pub_;
+    rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr feature_markers_pub_;
+    rclcpp::Publisher<visualization_msgs::msg::Marker>::ShardePtr keypoints_markers_pub_;
 
     void checkAndPublishKeypoints();
 

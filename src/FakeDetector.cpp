@@ -2,7 +2,7 @@
 
 KeypointDetector::KeypointDetector() : Node("keypoint_detector"), tf_buffer_(get_clock()), tf_listener_(tf_buffer_) {
 
-    std::string yaml_file = "square_two_boxes.yaml";
+    std::string yaml_file = "square_one_box.yaml";
 
     std::string feature_path;
 
@@ -18,7 +18,7 @@ KeypointDetector::KeypointDetector() : Node("keypoint_detector"), tf_buffer_(get
         map_features::MapLoader loader;
         RCLCPP_INFO(this->get_logger(), "Loading features from %s", feature_path.c_str());
         loader.loadToGlobalMap(feature_path);
-        global_features_ =map_features::MapLoader::getGlobalFeatureMap();
+        global_features_ = map_features::MapLoader::getGlobalFeatureMap();
 
 
     } catch (const std::exception& e) {
@@ -26,9 +26,11 @@ KeypointDetector::KeypointDetector() : Node("keypoint_detector"), tf_buffer_(get
         return;
     }
     
-    feature_pub_ = this->create_publisher<robot_msgs::msg::FeatureArray>("/corner", 10);
+    feature_pub_ = this->create_publisher<robot_msgs::msg::FeatureArray>("/features", 10);
 
-    timer_ = create_wall_timer(std::chrono::milliseconds(1000), std::bind(&KeypointDetector::checkAndPublishKeypoints, this));
+    feature_markers_pub_ = this->create_publisher<visualization_msgs::msg::MarkerArray>("/feature_markers", 10);
+
+    timer_ = create_wall_timer(std::chrono::milliseconds(500), std::bind(&KeypointDetector::checkAndPublishKeypoints, this));
 }
 
 void KeypointDetector::checkAndPublishKeypoints() {
@@ -36,7 +38,7 @@ void KeypointDetector::checkAndPublishKeypoints() {
     rclcpp::Time now = this->get_clock()->now() - rclcpp::Duration::from_seconds(0.05);
 
     try {
-        transform = tf_buffer_.lookupTransform("base_link_real", "map", now);
+        transform = tf_buffer_.lookupTransform("base_footprint_real", "map", now);
 
     } catch (tf2::TransformException &ex) {
         RCLCPP_WARN(get_logger(), "Could not get robot transform: %s", ex.what());
@@ -44,6 +46,7 @@ void KeypointDetector::checkAndPublishKeypoints() {
     }
 
     publishTransformedFeatures(transform);
+
     
 }
 
@@ -63,10 +66,14 @@ double KeypointDetector::computeSensorNoise(double distance) {
     return std::min(std::max(noise, min_noise), max_noise);
 }
 
+
+
 void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::TransformStamped& transform) {
     robot_msgs::msg::FeatureArray feature_array_msg;
-    RCLCPP_INFO(get_logger(), "Entering publish features");
+    visualization_msgs::msg::MarkerArray marker_array;
 
+    //RCLCPP_INFO(get_logger(), "Entering publish features");
+    int i = 0; 
     for (const auto &feature : global_features_) {
         std::shared_ptr<map_features::Feature> feature_map;
         if(feature->type == "corner"){
@@ -142,9 +149,40 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
 
         feature_array_msg.features.push_back(feature_msg);
 
+        // MARKER -----------------------------------
+        visualization_msgs::msg::Marker marker;
+        marker.header.frame_id = "base_footprint";
+        marker.header.stamp = this->get_clock()->now();
+        marker.ns = "feature";
+        marker.id = i++;
+
+        marker.type = visualization_msgs::msg::Marker::ARROW;
+        marker.action = visualization_msgs::msg::Marker::ADD;
+
+        marker.pose.position.x = transformed_point.x;
+        marker.pose.position.y = transformed_point.y;
+        marker.pose.position.z = transformed_point.z;
+
+        marker.pose.orientation.x = q.x();
+        marker.pose.orientation.y = q.y();
+        marker.pose.orientation.z = q.z();
+        marker.pose.orientation.w = q.w();
+
+        marker.scale.x = 0.2;
+        marker.scale.y = 0.01;
+        marker.scale.z = 0.01;
+        marker.color.a = 1.0;
+        marker.color.r = 0.0;
+        marker.color.g = 1.0;
+        marker.color.b = 0.0;
+        marker.lifetime = rclcpp::Duration::from_nanoseconds(0);
+
+        marker_array.markers.push_back(marker);
+
     }
 
     feature_pub_->publish(feature_array_msg);
+    feature_markers_pub_->publish(marker_array);
 
 }
 
