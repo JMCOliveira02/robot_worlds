@@ -70,8 +70,8 @@ void RobotController::step() {
   double random_x = 0.0;
   double random_y = 0.0;
   double random_theta = 0.0;
-  bool randomSpawn = true;
-  if(first_update)
+  bool randomSpawn = false;
+  if(false)
   {
     if(randomSpawn)
     {  
@@ -100,16 +100,6 @@ void RobotController::step() {
     wb_supervisor_field_set_sf_vec3f(translation_field, init_position);
     wb_supervisor_field_set_sf_rotation(rotation_field, init_orientation);
 
-
-    spawn_x = random_x;
-    spawn_y = random_y;
-    spawn_z = 0;
-
-    spawn_theta = random_theta;
-    tf2::Quaternion q;
-    q.setRPY(0, 0, spawn_theta);
-    spawn_q = q;
-
   }
 
   
@@ -127,16 +117,12 @@ void RobotController::step() {
 
   tf2::Quaternion q;
   mat.getRotation(q);
-  double roll, pitch, theta;
-  tf2::Matrix3x3(q).getRPY(roll, pitch, theta);
-
-  tf2::Quaternion relative_q = spawn_q.inverse() * q;
 
 
   geometry_msgs::msg::TransformStamped tf_real;
   tf_real.header.stamp = node_->get_clock()->now();
   tf_real.header.frame_id = "map";
-  tf_real.child_frame_id = "base_link_real";
+  tf_real.child_frame_id = "base_footprint_real";
   tf_real.transform.translation.x = position[0];
   tf_real.transform.translation.y = position[1];
   tf_real.transform.translation.z = position[2];
@@ -145,13 +131,13 @@ void RobotController::step() {
   tf_real.transform.rotation.z = q.z();
   tf_real.transform.rotation.w = q.w();
   tf_broadcaster_real->sendTransform(tf_real);
-  //printf("position: %f %f %f\n", position[0], position[1], position[2]);
-  #pragma endregion PositionBroadcast
+  #pragma endregion RealPositionBroadcast
 
   #pragma region EstimatedPositionBroadcast
   
   left_wheel_position = wb_position_sensor_get_value(left_encoder);
   right_wheel_position = wb_position_sensor_get_value(right_encoder);
+
   if(first_update){
     first_update = false;
   }
@@ -166,8 +152,6 @@ void RobotController::step() {
     last_left_wheel_pos = left_wheel_position;
     last_right_wheel_pos = right_wheel_position;
 
-    //std::cout << "est_theta: " << est_theta << std::endl;
-    //std::cout << "delta_theta: " << delta_theta << std::endl;
     double updated_theta = est_theta + delta_theta / 2.0;
     if(updated_theta > M_PI) updated_theta -= 2 * M_PI;
     if(updated_theta < -M_PI) updated_theta += 2 * M_PI;
@@ -185,7 +169,7 @@ void RobotController::step() {
     geometry_msgs::msg::TransformStamped tf_relative;
     tf_relative.header.stamp = node_->get_clock()->now();
     tf_relative.header.frame_id = "odom";
-    tf_relative.child_frame_id = "base_link";
+    tf_relative.child_frame_id = "base_footprint";
     tf_relative.transform.translation.x = est_x;
     tf_relative.transform.translation.y = est_y;
     tf_relative.transform.translation.z = 0.0;
@@ -196,9 +180,9 @@ void RobotController::step() {
     tf_broadcaster_relative->sendTransform(tf_relative);
 
     nav_msgs::msg::Odometry odom;
-    odom.header.stamp = rclcpp::Clock().now();
+    odom.header.stamp = node_->get_clock()->now();
     odom.header.frame_id = "odom";
-    odom.child_frame_id = "base_link";
+    odom.child_frame_id = "base_footprint";
     odom.pose.pose.position.x = est_x;
     odom.pose.pose.position.y = est_y;
     odom.pose.pose.position.z = 0.0;

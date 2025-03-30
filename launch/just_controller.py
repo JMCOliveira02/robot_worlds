@@ -18,11 +18,6 @@ def generate_launch_description():
         ]
     )
 
-    webots = WebotsLauncher(
-        world=os.path.join(world_dir, 'worlds', 'square_box_rectangle.wbt')
-    )
-
-
     teleop = Node(
         package="teleop_twist_keyboard",
         executable="teleop_twist_keyboard",
@@ -31,7 +26,12 @@ def generate_launch_description():
         prefix="gnome-terminal --",
     )
 
-
+    tf_static = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="map_to_odom_broadcaster",
+        arguments=["0", "0", "0", "0", "0", "0", "map", "odom"]
+    )
 
     tf_static_lidar = Node(
         package="tf2_ros",
@@ -42,14 +42,8 @@ def generate_launch_description():
 
 
     return LaunchDescription([
+        tf_static,
         tf_static_lidar,
-        webots,
         robot_controller,
-        teleop,
-        launch.actions.RegisterEventHandler(
-            event_handler=launch.event_handlers.OnProcessExit(
-                target_action=webots,
-                on_exit=[launch.actions.EmitEvent(event=launch.events.Shutdown())],
-            )
-        )
+        teleop
     ])
