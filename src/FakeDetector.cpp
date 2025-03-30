@@ -135,7 +135,7 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
         feature_msg.orientation_covariance = {
             0.0, 0.0,  0.0,
             0.0, 0.0,  0.0,
-            0.0, 0.0,  0.1 // 0.05 rad² noise on yaw
+            0.0, 0.0,  0.1*0.1
         };
 
         feature_msg.type = feature_map->type;
