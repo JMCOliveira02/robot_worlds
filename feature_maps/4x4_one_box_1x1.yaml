@@ -1,19 +1,19 @@
 features:
-  - type: corner
-    position: { x: 2, y: 2, z: 0.0 }
-    orientation: { theta: -135 }
+  #- type: corner
+  #  position: { x: 2, y: 2, z: 0.0 }
+  #  orientation: { theta: -135 }
 
-  - type: corner
-    position: { x: -2, y: 2, z: 0.0  }
-    orientation: { theta: -45 }
+  #- type: corner
+  #  position: { x: -2, y: 2, z: 0.0  }
+  #  orientation: { theta: -45 }
 
-  - type: corner
-    position: { x: -2, y: -2, z: 0.0  }
-    orientation: { theta: 45 }
+  #- type: corner
+  #  position: { x: -2, y: -2, z: 0.0  }
+  #  orientation: { theta: 45 }
 
-  - type: corner
-    position: { x: 2, y: -2, z: 0.0  }
-    orientation: { theta: 135 }
+  #- type: corner
+  #  position: { x: 2, y: -2, z: 0.0  }
+  #  orientation: { theta: 135 }
 
   - type: square
     position: { x: 0.0, y: 0.0, z: 0.0 }

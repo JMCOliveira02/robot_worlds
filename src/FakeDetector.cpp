@@ -2,7 +2,7 @@
 
 KeypointDetector::KeypointDetector() : Node("keypoint_detector"), tf_buffer_(get_clock()), tf_listener_(tf_buffer_) {
 
-    std::string yaml_file = "square_one_box.yaml";
+    std::string yaml_file = "4x4_one_box_1xpt5.yaml";
 
     std::string feature_path;
 
