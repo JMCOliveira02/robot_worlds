@@ -2,27 +2,19 @@
 
 KeypointDetector::KeypointDetector() : Node("keypoint_detector"), tf_buffer_(get_clock()), tf_listener_(tf_buffer_) {
 
-    std::string yaml_file = "4x4_two_cylinders_pt3.yaml";
-
-    std::string feature_path;
-
-    try {
-        feature_path = ament_index_cpp::get_package_share_directory("robot_worlds") + "/feature_maps/" + yaml_file;
-        std::cout<<"Feature path: "<<feature_path<<std::endl;
-    } catch (const std::exception& e) {
-        RCLCPP_ERROR(this->get_logger(), "Failed to get package share directory: %s", e.what());
-        return;
-    }
+    // Retrieve the map_features parameter passed from the launch file
+    this->declare_parameter("map_features", std::string(""));
+    this->get_parameter("map_features", map_features_);
 
     try {
         map_features::MapLoader loader;
-        RCLCPP_INFO(this->get_logger(), "Loading features from %s", feature_path.c_str());
-        loader.loadToGlobalMap(feature_path);
+        RCLCPP_INFO(this->get_logger(), "Loading features from %s", map_features_.c_str());
+        loader.loadToGlobalMap(map_features_);
         global_features_ = map_features::MapLoader::getGlobalFeatureMap();
 
 
     } catch (const std::exception& e) {
-        RCLCPP_ERROR(this->get_logger(), "Failed to load features: %s from %s", e.what(), feature_path.c_str());
+        RCLCPP_ERROR(this->get_logger(), "Failed to load features: %s from %s", e.what(), map_features_.c_str());
         return;
     }
     
@@ -134,6 +126,8 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
         };
 
         feature_msg.type = feature_map->type;
+
+        feature_msg.confidence = 0.01;
 
         feature_array_msg.features.push_back(feature_msg);
 

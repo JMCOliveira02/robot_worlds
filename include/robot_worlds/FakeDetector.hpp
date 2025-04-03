@@ -25,7 +25,8 @@ public:
     KeypointDetector();
 
 private:
-
+    std::string map_features_;
+    
     std::vector<map_features::FeaturePtr> global_features_;
 
     std::vector<std::pair<double, double>> keypoints_;
