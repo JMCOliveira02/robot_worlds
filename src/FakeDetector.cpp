@@ -2,7 +2,7 @@
 
 KeypointDetector::KeypointDetector() : Node("keypoint_detector"), tf_buffer_(get_clock()), tf_listener_(tf_buffer_) {
 
-    std::string yaml_file = "4x4_one_box_1xpt5.yaml";
+    std::string yaml_file = "4x4_two_cylinders_pt3.yaml";
 
     std::string feature_path;
 
@@ -68,12 +68,9 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
         if(feature->type == "corner"){
             feature_map = std::dynamic_pointer_cast<map_features::FeatureCorner>(feature);
         }
-        else if(feature->type== "square" || feature->type == "rectangle"){
+        else{
             feature_map = std::dynamic_pointer_cast<map_features::FeatureObject>(feature);
 
-        }
-        else{
-            continue;
         }
 
         if (!feature_map) {
