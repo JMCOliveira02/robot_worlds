@@ -11,6 +11,7 @@
 #include <yaml-cpp/yaml.h>
 #include <vector>
 #include <string>
+#include <random>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
@@ -33,6 +34,9 @@ private:
     
     tf2_ros::Buffer tf_buffer_;
     tf2_ros::TransformListener tf_listener_;
+
+    // Random number generator
+    std::default_random_engine generator_;
 
     rclcpp::Publisher<robot_msgs::msg::FeatureArray>::SharedPtr feature_pub_;
     rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr feature_markers_pub_;

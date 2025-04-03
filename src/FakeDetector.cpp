@@ -79,19 +79,35 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
         point.x = feature_map->x;
         point.y = feature_map->y;
         point.z = 0.0;
-
         geometry_msgs::msg::Point transformed_point;
         tf2::doTransform(point, transformed_point, transform);
 
+        double distance = std::hypot(transformed_point.x, transformed_point.y);
+        double noise_position = computeSensorNoise(distance);
+        double noise_angle = 0.05;
+
+
+
+        std::normal_distribution<double> noise_pos_x(0.0, noise_position);
+        std::normal_distribution<double> noise_pos_y(0.0, noise_position);
+        std::normal_distribution<double> noise_pos_z(0.0, noise_position);
+        std::normal_distribution<double> noise_theta(0.0, noise_angle);
+          
+        transformed_point.x = transformed_point.x + noise_pos_x(generator_);
+        transformed_point.y = transformed_point.y + noise_pos_y(generator_);
+        transformed_point.z = 0;
+
+
         feature_msg.position = transformed_point;
 
-        RCLCPP_INFO(get_logger(), "Transformed point: (%.3f, %.3f, %.3f)", transformed_point.x, transformed_point.y, transformed_point.z);
+        RCLCPP_INFO(get_logger(), "Transformed noisy point: (%.3f, %.3f, %.3f)", transformed_point.x, transformed_point.y, transformed_point.z);
         // ------------------------------------ POSITION
         
 
         //
         // ORIENTATION ------------------------------------
-        double feature_theta_radians = feature_map->theta * M_PI / 180.0 ;
+        double feature_theta_radians = feature_map->theta * M_PI / 180.0 + noise_theta(generator_);
+        
         tf2::Quaternion q_feature;
         q_feature.setRPY(0, 0, feature_theta_radians);
 
@@ -109,12 +125,9 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
         feature_msg.orientation = tf2::toMsg(q);
         // ------------------------------------ ORIENTATION
 
-        double distance = std::hypot(transformed_point.x, transformed_point.y);
-        double noise = computeSensorNoise(distance);
-
         feature_msg.position_covariance = {
-            noise*noise, 0.0,  0.0,
-            0.0,  noise*noise, 0.0,
+            noise_angle*noise_angle, 0.0,  0.0,
+            0.0,  noise_angle*noise_angle, 0.0,
             0.0,  0.0,  0.0
         };
 
