@@ -48,6 +48,7 @@ install(
 # Export the plugin XML so Webots knows how to load it
 pluginlib_export_plugin_description_file(webots_ros2_driver robot_controller.xml)
 
+
 # Build the RobotController as a shared library (for pluginlib)
 add_library(${PROJECT_NAME} SHARED
   src/RobotController.cpp

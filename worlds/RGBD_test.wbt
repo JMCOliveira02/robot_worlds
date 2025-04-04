@@ -12,18 +12,59 @@ WorldInfo {
   basicTimeStep 20
 }
 Viewpoint {
-  orientation -0.5680874203646414 0.6342845074960597 0.5243661377071634 2.0822654673893304
-  position 0.009484109363041449 0.4150535052241586 4.718012871519434
+  orientation -0.09699180166757859 -0.051760912171025686 0.9939383272519982 4.117006920136515
+  position 2.8961788297692777 3.993839290069593 1.3505821581139479
 }
 TexturedBackground {
 }
 TexturedBackgroundLight {
 }
 RectangleArena {
-  floorSize 1.5 1.5
+  floorSize 4 4
+}
+Solid {
+  translation -1 0 0.1
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.6 0.3 0.2
+        }
+      }
+      geometry Cylinder {
+        height 0.2
+        radius 0.3
+      }
+    }
+  ]
+  boundingObject Cylinder {
+    height 0.1
+    radius 0.05
+  }
+}
+Solid {
+  translation 1 0 0.1
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.6 0.3 0.2
+        }
+      }
+      geometry Cylinder {
+        height 0.2
+        radius 0.3
+      }
+    }
+  ]
+  name "solid(1)"
+  boundingObject Cylinder {
+    height 0.1
+    radius 0.05
+  }
 }
 DEF ROBOT_1 Robot {
-  translation 0 0 0.001
+  translation 1 1 0.001
   children [
     Camera {
     }
@@ -36,6 +77,7 @@ DEF ROBOT_1 Robot {
       horizontalResolution 360
       fieldOfView 6.28
       numberOfLayers 1
+      maxRange 3
     }
     HingeJoint {
       jointParameters HingeJointParameters {

@@ -39,6 +39,11 @@ DEF ROBOT_1 Robot {
   translation -9.15719245155825e-08 1.7978260805955264e-11 -0.00011400007550241287
   rotation 1.65513951447425e-07 -0.9999999999999863 -2.7163340181627438e-09 0.030916872486638575
   children [
+    Camera {
+    }
+    RangeFinder {
+      name "rangeFinder"
+    }
     Lidar {
       translation 0 0 0.05
       name "lidar2D"
