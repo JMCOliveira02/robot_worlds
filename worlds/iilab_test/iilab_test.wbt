@@ -4,8 +4,8 @@ WorldInfo {
 }
 Viewpoint {
   fieldOfView 2
-  orientation 0.07005497432206242 0.9535205671735665 -0.2930713710851598 0.3672173066845004
-  position -29.34844828616349 21.202786733540645 12.791719915150878
+  orientation 0.23790168010920246 0.5689342670989206 -0.787220801504783 0.9483961396906563
+  position -2.6585424259688772 3.2085915182464455 1.4959931865254978
   exposure 5
   follow "robot"
   followType "Mounted Shot"
@@ -16,7 +16,6 @@ DirectionalLight {
   castShadows TRUE
 }
 Solid {
-  translation 17.79 -9.92 -0.50004
   rotation 1 0 0 1.5708
   children [
     Solid {
@@ -301,7 +300,7 @@ Background {
   ]
 }
 DEF ROBOT_1 Robot {
-  translation -1.2482697747684266 1.4235621210550538 -0.10351687219410345
+  translation -1.74145 1.6022 0.759061
   rotation -0.02084972420474093 0.0034437670005248986 -0.9997766898009938 -2.7947733068083056
   children [
     RangeFinder {
@@ -317,7 +316,7 @@ DEF ROBOT_1 Robot {
       translation 0.00553488 0 0.159904
       rotation 0 -1 0 -0.0346
       name "lidar2D"
-      horizontalResolution 40
+      horizontalResolution 400
       fieldOfView 6.282
       verticalFieldOfView 2.5
       numberOfLayers 15
@@ -963,6 +962,4 @@ DEF ROBOT_1 Robot {
   }
   controller "<extern>"
   supervisor TRUE
-  linearVelocity 4.343851189858583e-11 -2.816327968613308e-10 -1.3674821275344585e-12
-  angularVelocity 1.2382300702227284e-11 2.5835031164758115e-11 1.746708563272935e-10
 }
