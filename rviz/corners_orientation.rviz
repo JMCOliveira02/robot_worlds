@@ -10,6 +10,7 @@ Panels:
         - /MarkerArray1
         - /MarkerArray1/Topic1
         - /MarkerArray1/Namespaces1
+        - /MarkerArray2
       Splitter Ratio: 0.5
     Tree Height: 707
   - Class: rviz_common/Selection
@@ -97,13 +98,14 @@ Visualization Manager:
       Show Axes: true
       Show Names: false
       Tree:
+        base_footprint:
+          lidar2D:
+            {}
         map:
           base_footprint_real:
             {}
           odom:
-            base_footprint:
-              lidar2D:
-                {}
+            {}
       Update Interval: 0
       Value: true
     - Class: rviz_default_plugins/MarkerArray
@@ -142,7 +144,7 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        feature: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -162,10 +164,48 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /particles
       Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Marker
+      Namespaces:
+        "": true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /corners_marker
+      Value: true
+    - Class: rviz_default_plugins/Marker
+      Enabled: true
+      Name: Marker
+      Namespaces:
+        "": true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /anchor_points_marker
+      Value: true
+    - Class: rviz_default_plugins/MarkerArray
+      Enabled: true
+      Name: MarkerArray
+      Namespaces:
+        orientations: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /orientated_corners_marker
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: odom
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:
@@ -223,10 +263,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.3197970390319824
+      Pitch: 1.3397964239120483
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 4.685417652130127
+      Yaw: 4.605419635772705
     Saved: ~
 Window Geometry:
   Displays:

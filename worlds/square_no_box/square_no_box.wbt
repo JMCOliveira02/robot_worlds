@@ -12,8 +12,8 @@ WorldInfo {
   basicTimeStep 20
 }
 Viewpoint {
-  orientation -0.5680874203646414 0.6342845074960597 0.5243661377071634 2.0822654673893304
-  position 0.009484109363041449 0.4150535052241586 4.718012871519434
+  orientation -0.38043996757918014 0.7300483239598363 0.5677102040229559 1.485270102487356
+  position -0.38265472786446814 -0.8246772962489409 1.7514805884610798
 }
 TexturedBackground {
 }
@@ -21,9 +21,10 @@ TexturedBackgroundLight {
 }
 RectangleArena {
   floorSize 1.5 1.5
+  wallHeight 0.3
 }
 DEF ROBOT_1 Robot {
-  translation 0 0 0.001
+  translation 0 0 -0.00112615
   children [
     Camera {
     }
@@ -39,7 +40,6 @@ DEF ROBOT_1 Robot {
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 1.7860363493046087e-07
         axis 0 1 0
         anchor 0 0 0.025
       }
@@ -52,8 +52,8 @@ DEF ROBOT_1 Robot {
         }
       ]
       endPoint Solid {
-        translation 0 0.045 0.025
-        rotation 0 1 0 0
+        translation 0 0.044999999999999984 0.025
+        rotation 0 -1 0 1.7881393432617193e-07
         children [
           DEF WHEEL Pose {
             rotation 1 0 0 1.5707996938995747
@@ -66,7 +66,7 @@ DEF ROBOT_1 Robot {
                 }
                 geometry Cylinder {
                   height 0.0001
-                  radius 0.025
+                  radius 0.024
                 }
               }
             ]
@@ -92,7 +92,7 @@ DEF ROBOT_1 Robot {
         }
       ]
       endPoint Solid {
-        translation 0 -0.045 0.025
+        translation 0 -0.044999999999999984 0.025
         rotation 0 1 0 0
         children [
           USE WHEEL

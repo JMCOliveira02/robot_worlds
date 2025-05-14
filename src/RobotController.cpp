@@ -2,7 +2,7 @@
 
 #define TIME_STEP 32
 #define HALF_DISTANCE_BETWEEN_WHEELS 0.045
-#define WHEEL_RADIUS 0.025
+#define WHEEL_RADIUS 0.024
 
 
 namespace robot_controller {
@@ -146,6 +146,9 @@ void RobotController::step() {
     double delta_left_wheel = left_wheel_position - last_left_wheel_pos;
     double delta_right_wheel = right_wheel_position - last_right_wheel_pos;
 
+    //std::cout << "LW_Pos: " << left_wheel_position << " -- RW_Pos: " << right_wheel_position << std::endl;
+
+
     double delta_distance = (delta_left_wheel + delta_right_wheel) * WHEEL_RADIUS / 2.0 ;
     double delta_theta = (delta_right_wheel - delta_left_wheel) * WHEEL_RADIUS / (2 * HALF_DISTANCE_BETWEEN_WHEELS);
 
@@ -162,10 +165,13 @@ void RobotController::step() {
     est_theta += delta_theta;
     if(est_theta > M_PI) est_theta -= 2 * M_PI;
     if(est_theta < -M_PI) est_theta += 2 * M_PI;
+    //std::cout << "X: " << est_x << " -- Y: " << est_y << std::endl;
     
     tf2::Quaternion est_q;
     est_q.setRPY(0, 0, est_theta);
 
+    
+    
     geometry_msgs::msg::TransformStamped tf_relative;
     tf_relative.header.stamp = node_->get_clock()->now();
     tf_relative.header.frame_id = "odom";

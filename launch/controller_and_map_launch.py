@@ -10,6 +10,7 @@ from webots_ros2_driver.webots_controller import WebotsController
 def generate_launch_description():
     world_dir = get_package_share_directory('robot_worlds')
     robot_description_path = os.path.join(world_dir, 'urdf', 'robot.urdf')
+    world_setup = "iilab"
 
     robot_controller = WebotsController(
         robot_name='robot',
@@ -19,14 +20,14 @@ def generate_launch_description():
     )
 
     webots = WebotsLauncher(
-        world=os.path.join(world_dir, 'worlds', 'square_no_box.wbt')
+        world=os.path.join(world_dir, 'worlds', world_setup, world_setup + '.wbt')
     )
 
     map_server = Node(
         package="nav2_map_server",
         executable="map_server",
         name="map_server",
-        parameters=[{"yaml_filename": os.path.join(world_dir, "maps", "square_no_box.yaml")}],
+        parameters=[{"yaml_filename": os.path.join(world_dir, "maps", world_setup, world_setup + '.yaml')}],
         output="screen"
     )
 
