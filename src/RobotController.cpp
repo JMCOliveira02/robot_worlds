@@ -1,8 +1,8 @@
 #include "robot_worlds/RobotController.hpp"
 
 #define TIME_STEP 32
-#define HALF_DISTANCE_BETWEEN_WHEELS 0.045
-#define WHEEL_RADIUS 0.024
+#define HALF_DISTANCE_BETWEEN_WHEELS 0.165 //0.045
+#define WHEEL_RADIUS 0.094//0.024
 
 
 namespace robot_controller {

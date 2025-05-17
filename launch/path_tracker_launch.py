@@ -75,13 +75,21 @@ def generate_launch_description():
         package="rviz2",
         executable="rviz2",
         name="rviz2",
-        arguments=["-d", os.path.join(world_dir, "rviz", "tf_and_map.rviz")],
+        arguments=["-d", os.path.join(world_dir, "rviz", "Paths.rviz")],
+        output="screen"
+    )
+
+    path_tracker = Node(
+        package="robot_worlds",
+        executable="path_tracker",
+        name="path_tracker",
         output="screen"
     )
 
 
     return LaunchDescription([
         rviz,
+        path_tracker,
         tf_static,
         tf_static_lidar,
         webots,

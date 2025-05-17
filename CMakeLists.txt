@@ -113,6 +113,33 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
 )
 
+##### PATH CONTROL NODE
+add_executable(path_tracker
+  src/PathTracker.cpp
+)
+
+# Ensure the target dependencies for linking (correct order)
+ament_target_dependencies(path_tracker
+  rclcpp
+  geometry_msgs
+  sensor_msgs
+  tf2
+  tf2_ros
+  tf2_geometry_msgs
+  nav_msgs
+  yaml-cpp
+  ament_index_cpp
+  visualization_msgs
+  robot_msgs
+)
+
+# Install the fake_detector binary
+install(TARGETS
+  path_tracker
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+
 #
 # ─── INSTALL RESOURCE DIRECTORIES ───────────────────────────────
 #

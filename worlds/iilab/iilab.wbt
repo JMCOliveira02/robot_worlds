@@ -4,8 +4,8 @@ WorldInfo {
 }
 Viewpoint {
   fieldOfView 2
-  orientation 0.23790168010920246 0.5689342670989206 -0.787220801504783 0.9483961396906563
-  position -2.6585424259688772 3.2085915182464455 1.4959931865254978
+  orientation -0.45037240177055293 0.08646300733381082 0.8886443878662695 2.4486135366703135
+  position -1.022558646289816 0.2359189550641858 1.7458946682961185
   exposure 5
   follow "robot"
   followType "Mounted Shot"
@@ -300,8 +300,8 @@ Background {
   ]
 }
 DEF ROBOT_1 Robot {
-  translation -1.74145 1.6022 0.759061
-  rotation -0.02084972420474093 0.0034437670005248986 -0.9997766898009938 -2.7947733068083056
+  translation -1.5200118998551222 1.5977785265338578 0.3964229263315205
+  rotation 0.02063152122255651 -0.0027089277014204966 0.9997834775803967 2.876848748047924
   children [
     RangeFinder {
       translation 0 0 0.17
@@ -316,11 +316,11 @@ DEF ROBOT_1 Robot {
       translation 0.00553488 0 0.159904
       rotation 0 -1 0 -0.0346
       name "lidar2D"
-      horizontalResolution 400
+      horizontalResolution 360
       fieldOfView 6.282
       verticalFieldOfView 2.5
-      numberOfLayers 15
-      maxRange 10
+      numberOfLayers 1
+      maxRange 3
     }
     DEF BODY Pose {
       rotation 0.5773502691896258 -0.5773502691896258 -0.5773502691896258 2.094395
@@ -462,23 +462,23 @@ DEF ROBOT_1 Robot {
     }
     DEF CASTER_WHEEL HingeJoint {
       jointParameters HingeJointParameters {
-        position 3.5789501514043605
+        position 3.578950247629584
         axis 0 0 1
         anchor -0.1918 0 0
         staticFriction 1
       }
       endPoint Solid {
-        translation -0.19180092841360935 3.3202132627181455e-06 0.00012943463177877979
-        rotation -0.4103395368760084 -0.6448332967870629 -0.644834462347594 3.920369890010753
+        translation -0.19180092841392882 3.3202131733876533e-06 0.00012943463177877976
+        rotation -0.4103395006274949 -0.6448333083204055 -0.6448344738809635 3.920369827961412
         children [
           DEF casterWheelRim HingeJoint {
             jointParameters HingeJointParameters {
-              position -4921.251633717294
+              position -4927.6764560971405
               anchor 0 -0.0521014 0.012843
             }
             endPoint Solid {
               translation 0 -0.0521014 0.012843
-              rotation 1 0 0 4.765647111502027
+              rotation -1 0 0 1.6591752683447465
               children [
                 DEF CASTER_WHEEL_RIM_SHAPE Shape {
                   appearance PBRAppearance {
@@ -556,6 +556,8 @@ DEF ROBOT_1 Robot {
               }
               physics Physics {
               }
+              linearVelocity 1.2948643594362663e-10 -9.419895835232556e-10 9.259572601483383e-08
+              angularVelocity -2.472061503881806e-09 -1.3677967252875792e-09 -1.9742531038319082e-08
             }
           }
           DEF FORK_SHAPE Shape {
@@ -613,11 +615,13 @@ DEF ROBOT_1 Robot {
         }
         physics Physics {
         }
+        linearVelocity 4.349528851279122e-11 -5.028214400167583e-10 4.0526389995566974e-08
+        angularVelocity -2.2115801923951074e-09 -5.271216221975762e-10 -1.9729203611895558e-08
       }
     }
     DEF LEFT_WHEEL HingeJoint {
       jointParameters HingeJointParameters {
-        position 2282.1154849430513
+        position 5.259764794574463e-07
         axis 0 1 0
         anchor 0 0.165 0
       }
@@ -631,8 +635,8 @@ DEF ROBOT_1 Robot {
         }
       ]
       endPoint Solid {
-        translation 2.696230871312628e-05 0.1649999220967009 -0.0001191372081137173
-        rotation -0.12448166873733792 0.12448161011203825 0.9843823662034393 4.696648824118037
+        translation 0.00012209866153722998 0.1649999220967009 -3.543627955935483e-06
+        rotation 0.5773501709871681 -0.5773501664300721 -0.5773504701515847 2.0943946916792737
         children [
           DEF BLACK_CYLINDER_SHAPE Shape {
             appearance PBRAppearance {
@@ -796,11 +800,13 @@ DEF ROBOT_1 Robot {
         }
         physics Physics {
         }
+        linearVelocity 2.0680797491202477e-10 1.8476749576369898e-10 3.8156106936845824e-08
+        angularVelocity -8.671201569917839e-10 -1.393008676512807e-09 5.647386091152394e-10
       }
     }
     DEF RIGHT_WHEEL HingeJoint {
       jointParameters HingeJointParameters {
-        position 2339.8498063993475
+        position -5.830132874251603e-07
         axis 0 1 0
         anchor 0 -0.165 0
       }
@@ -814,8 +820,8 @@ DEF ROBOT_1 Robot {
         }
       ]
       endPoint Solid {
-        translation -4.9028923897095785e-06 -0.16500007497486968 -7.34214469729506e-06
-        rotation -0.4105492159775174 0.4105492863263025 -0.8141858662229463 1.774930216968267
+        translation 8.30752716662496e-06 -0.16500007497486968 2.988383328302822e-06
+        rotation 0.5773503807373652 -0.5773503814919899 -0.577350045339457 2.09439533830643
         children [
           DEF RIGHT_BLACK_CYLINDER_SHAPE Shape {
             appearance PBRAppearance {
@@ -895,6 +901,8 @@ DEF ROBOT_1 Robot {
         boundingObject USE BOUNDING_WHEEL
         physics Physics {
         }
+        linearVelocity -5.372593489216469e-10 3.8623689848436735e-10 4.1702999515913014e-08
+        angularVelocity -4.656854805795105e-10 8.762587930494814e-11 5.646526563120762e-10
       }
     }
   ]
@@ -962,4 +970,123 @@ DEF ROBOT_1 Robot {
   }
   controller "<extern>"
   supervisor TRUE
+  linearVelocity -1.0078017576020813e-10 1.575132801967828e-11 -3.5769102169068027e-10
+  angularVelocity -8.927330713320206e-10 -1.3878656671159097e-09 5.647213934299263e-10
+}
+DEF ROBOT_1 Robot {
+  translation -0.5199978626421079 0.6599997537746769 0.2985990730649102
+  rotation 0.0002351558706976675 -0.9999999723486507 -2.101044163583296e-06 0.0021528946049520557
+  children [
+    Camera {
+    }
+    RangeFinder {
+      name "rangeFinder"
+    }
+    Lidar {
+      translation 0 0 0.05
+      name "lidar2D"
+      horizontalResolution 360
+      fieldOfView 6.28
+      numberOfLayers 1
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position -3.880411863511458e-10
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "left wheel motor"
+        }
+        PositionSensor {
+          name "left wheel encoder"
+        }
+      ]
+      endPoint Solid {
+        translation 0 0.045000000000000054 0.025
+        rotation 0 -1 0 1.6049041769309358e-07
+        children [
+          DEF WHEEL Pose {
+            rotation 1 0 0 1.5707996938995747
+            children [
+              Shape {
+                appearance PBRAppearance {
+                  baseColor 1 0 0
+                  roughness 1
+                  metalness 0
+                }
+                geometry Cylinder {
+                  height 0.0001
+                  radius 0.024
+                }
+              }
+            ]
+          }
+        ]
+        name "left wheel"
+        boundingObject USE WHEEL
+        physics Physics {
+        }
+        linearVelocity 4.343347171987596e-08 1.1580548382886492e-06 -2.1385311556255423e-06
+        angularVelocity -4.8406396295986434e-05 2.6273994221013325e-06 1.8527185074484494e-07
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        position -3.8789563737504065e-10
+        axis 0 1 0
+        anchor 0 0 0.025
+      }
+      device [
+        RotationalMotor {
+          name "right wheel motor"
+        }
+        PositionSensor {
+          name "right wheel encoder"
+        }
+      ]
+      endPoint Solid {
+        translation 0 -0.045 0.025
+        rotation 0 1 0 0
+        children [
+          USE WHEEL
+        ]
+        name "right wheel"
+        boundingObject USE WHEEL
+        physics Physics {
+        }
+        linearVelocity 5.099770450449124e-08 1.1575647270591688e-06 2.1749339860266303e-06
+        angularVelocity -4.840704622213415e-05 2.6276128526228272e-06 1.8667210618093744e-07
+      }
+    }
+    Pose {
+      translation 0 0 0.0415
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0 0 1
+            roughness 1
+            metalness 0
+          }
+          geometry DEF BODY Cylinder {
+            height 0.08
+            radius 0.045
+          }
+        }
+      ]
+    }
+  ]
+  boundingObject Pose {
+    translation 0 0 0.0415
+    children [
+      USE BODY
+    ]
+  }
+  physics Physics {
+  }
+  controller "<none>"
+  supervisor TRUE
+  linearVelocity 4.4950249698371226e-08 1.951814292328233e-06 1.3116026733362593e-08
+  angularVelocity -4.84067707810669e-05 8.081039045302233e-07 1.8617371435874366e-07
 }
