@@ -44,7 +44,7 @@ void KeypointDetector::checkAndPublishKeypoints() {
 
 double KeypointDetector::computeSensorNoise(double distance) {
 
-    return distance * 0.15; 
+    return distance * 0.05; 
 }
 
 

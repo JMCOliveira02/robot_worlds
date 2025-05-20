@@ -18,9 +18,10 @@ PathTracker::PathTracker() : Node("path_tracker"), tf_buffer_(this->get_clock())
 
 void PathTracker::updatePaths() {
     updatePathForFrame("base_footprint_real", real_path, real_path_pub_);
-    updatePathForFrame("base_footprint", estimated_path, estimated_path_pub_);
+    updatePathForFrame("estimated_pose", estimated_path, estimated_path_pub_);
 
 }
+
 
 void PathTracker::updatePathForFrame(const std::string& frame_id, nav_msgs::msg::Path& path,
                             rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr pub)

@@ -21,8 +21,6 @@ class PathTracker : public rclcpp::Node {
 public: 
     PathTracker();
 private:
-    // Checkpoints for robot to follow
-    std::vector<std::pair<double, double>> checkpoints;
 
     // Path messages
     nav_msgs::msg::Path real_path;
@@ -31,6 +29,9 @@ private:
     // Real and estimated path publishers
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr real_path_pub_;
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr estimated_path_pub_;
+
+    // Pose subscriber
+    rclcpp::Subscription<geometry_msgs::msg::PoseWithCovarianceStamped>::SharedPtr pose_sub_;
 
     // Timer for paths update
     rclcpp::TimerBase::SharedPtr update_path_timer_;
@@ -42,6 +43,8 @@ private:
     // Methods to update the paths
     void updatePaths();
     void updatePathForFrame(const std::string& frame_id, nav_msgs::msg::Path& path,
+                            rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr pub);
+    void updatePathCallback(const std::string& topic, nav_msgs::msg::Path& path,
                             rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr pub);
 
 };
