@@ -84,7 +84,7 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
 
         double distance = std::hypot(transformed_point.x, transformed_point.y);
         double noise_position = computeSensorNoise(distance);
-        double noise_angle = 0.05;
+        double noise_angle = 0.1;
 
 
 
@@ -93,8 +93,8 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
         std::normal_distribution<double> noise_pos_z(0.0, noise_position);
         std::normal_distribution<double> noise_theta(0.0, noise_angle);
           
-        transformed_point.x = transformed_point.x + noise_pos_x(generator_);
-        transformed_point.y = transformed_point.y + noise_pos_y(generator_);
+        transformed_point.x = transformed_point.x;// + noise_pos_x(generator_);
+        transformed_point.y = transformed_point.y ;//+ noise_pos_y(generator_);
         transformed_point.z = 0;
 
 
@@ -106,7 +106,7 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
 
         //
         // ORIENTATION ------------------------------------
-        double feature_theta_radians = feature_map->theta * M_PI / 180.0 + noise_theta(generator_);
+        double feature_theta_radians = feature_map->theta * (M_PI / 180.0) + noise_theta(generator_);
         
         tf2::Quaternion q_feature;
         q_feature.setRPY(0, 0, feature_theta_radians);
@@ -126,8 +126,8 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
         // ------------------------------------ ORIENTATION
 
         feature_msg.position_covariance = {
-            noise_angle*noise_angle, 0.0,  0.0,
-            0.0,  noise_angle*noise_angle, 0.0,
+            noise_position*noise_position, 0.0,  0.0,
+            0.0,  noise_position*noise_position, 0.0,
             0.0,  0.0,  0.0
         };
 
@@ -135,12 +135,12 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
         feature_msg.orientation_covariance = {
             0.0, 0.0,  0.0,
             0.0, 0.0,  0.0,
-            0.0, 0.0,  0.05*0.05
+            0.0, 0.0,  noise_angle*noise_angle
         };
 
         feature_msg.type = feature_map->type;
 
-        feature_msg.confidence = 0.01;
+        feature_msg.confidence = 0.95;
 
         feature_array_msg.features.push_back(feature_msg);
 

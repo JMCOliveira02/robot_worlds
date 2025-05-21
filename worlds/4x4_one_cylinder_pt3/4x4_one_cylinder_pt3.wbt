@@ -43,19 +43,22 @@ Solid {
   }
 }
 DEF ROBOT_1 Robot {
-  translation 1 1 0.001
+  translation 0.75 0.75 -0.00112615
   children [
+    Camera {
+    }
+    RangeFinder {
+      name "rangeFinder"
+    }
     Lidar {
       translation 0 0 0.05
       name "lidar2D"
       horizontalResolution 360
       fieldOfView 6.28
       numberOfLayers 1
-      maxRange 3
     }
     HingeJoint {
       jointParameters HingeJointParameters {
-        position 1.7860363493046087e-07
         axis 0 1 0
         anchor 0 0 0.025
       }
@@ -68,8 +71,8 @@ DEF ROBOT_1 Robot {
         }
       ]
       endPoint Solid {
-        translation 0 0.045 0.025
-        rotation 0 1 0 0
+        translation 0 0.044999999999999984 0.025
+        rotation 0 -1 0 1.7881393432617193e-07
         children [
           DEF WHEEL Pose {
             rotation 1 0 0 1.5707996938995747
@@ -82,7 +85,7 @@ DEF ROBOT_1 Robot {
                 }
                 geometry Cylinder {
                   height 0.0001
-                  radius 0.025
+                  radius 0.024
                 }
               }
             ]
@@ -108,7 +111,7 @@ DEF ROBOT_1 Robot {
         }
       ]
       endPoint Solid {
-        translation 0 -0.045 0.025
+        translation 0 -0.044999999999999984 0.025
         rotation 0 1 0 0
         children [
           USE WHEEL
