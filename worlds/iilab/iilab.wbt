@@ -307,10 +307,17 @@ DEF ROBOT_1 Robot {
       translation 0 0 0.17
       rotation 0 -1 0 -0.0346
       name "rangeFinder"
+      minRange    0.01   
+      maxRange    6.4 
+      samplingPeriod 3000  
     }
     Camera {
       translation 0 0 0.17
       rotation 0 -1 0 -0.0346
+      name "camera"
+      near        0.01   
+      far         6.4 
+      samplingPeriod 3000  
     }
     Lidar {
       translation 0.00553488 0 0.159904
