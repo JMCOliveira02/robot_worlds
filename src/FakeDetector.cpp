@@ -124,15 +124,11 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
         // ------------------------------------ ORIENTATION
 
         feature_msg.position_covariance = {
-            noise_position * noise_position, 0.0, 0.0,
-            0.0, noise_position * noise_position, 0.0,
-            0.0, 0.0, 0.0};
+            noise_position * noise_position, 0.0,
+            0.0, noise_position * noise_position};
 
         // ORIENTATION COVARIANCE (only yaw matters, rest 0)
-        feature_msg.orientation_covariance = {
-            0.0, 0.0, 0.0,
-            0.0, 0.0, 0.0,
-            0.0, 0.0, noise_angle * noise_angle};
+        feature_msg.orientation_variance = noise_angle * noise_angle;
 
         feature_msg.type = feature_map->type;
 
