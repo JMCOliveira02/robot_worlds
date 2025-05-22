@@ -61,14 +61,8 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
     for (const auto &feature : global_features_)
     {
         std::shared_ptr<map_features::Feature> feature_map;
-        if (feature->type == "corner")
-        {
-            feature_map = std::dynamic_pointer_cast<map_features::FeatureCorner>(feature);
-        }
-        else
-        {
-            feature_map = std::dynamic_pointer_cast<map_features::FeatureObject>(feature);
-        }
+
+        feature_map = std::dynamic_pointer_cast<map_features::Feature>(feature);
 
         if (!feature_map)
         {
@@ -84,7 +78,6 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
         geometry_msgs::msg::Point point;
         point.x = feature_map->x;
         point.y = feature_map->y;
-        point.z = 0.0;
         geometry_msgs::msg::Point transformed_point;
         tf2::doTransform(point, transformed_point, transform);
 
@@ -94,14 +87,13 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
 
         std::normal_distribution<double> noise_pos_x(0.0, noise_position);
         std::normal_distribution<double> noise_pos_y(0.0, noise_position);
-        std::normal_distribution<double> noise_pos_z(0.0, noise_position);
         std::normal_distribution<double> noise_theta(0.0, noise_angle);
 
         transformed_point.x = transformed_point.x; // + noise_pos_x(generator_);
         transformed_point.y = transformed_point.y; //+ noise_pos_y(generator_);
-        transformed_point.z = 0;
 
-        feature_msg.position = transformed_point;
+        feature_msg.x = transformed_point.x;
+        feature_msg.y = transformed_point.y;
 
         RCLCPP_INFO(get_logger(), "Transformed noisy point: (%.3f, %.3f, %.3f)", transformed_point.x, transformed_point.y, transformed_point.z);
         // ------------------------------------ POSITION
@@ -121,12 +113,12 @@ void KeypointDetector::publishTransformedFeatures(const geometry_msgs::msg::Tran
 
         tf2::Quaternion q = q_transform * q_feature;
 
-        feature_msg.orientation = tf2::toMsg(q);
         // get the yaw angle
         double roll, pitch, yaw;
         tf2::Matrix3x3(q).getRPY(roll, pitch, yaw);
-        // get yaw in degrees
-        yaw = yaw * (180.0 / M_PI);
+
+        feature_msg.theta = yaw;
+
         RCLCPP_INFO(this->get_logger(), "Angle of feature %i: %.3f", i, yaw);
 
         // ------------------------------------ ORIENTATION
